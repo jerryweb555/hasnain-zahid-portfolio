@@ -1,0 +1,42 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Single Page Application redirect rule
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security and caching headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Allow PDF certificates and CV to be previewed in iframes and downloaded
+[[headers]]
+  for = "/certificates/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Content-Disposition = "inline"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/docs/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Content-Disposition = "inline"
+    X-Frame-Options = "SAMEORIGIN"
+
+# Immutable caching for hashed assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
